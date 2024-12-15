@@ -7,20 +7,43 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          const Text('Feature Recipe'),
-          Card(
-            child: InkWell(
-              onTap: () => context.go('/recipe'),
-              child: Column(
-                children: [Text(featuredRecipe.name)],
-              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Feature Recipe'),
+        Card(
+          child: InkWell(
+            onTap: () => context.go('/recipe/1'),
+            child: Column(
+              children: [Text(featuredRecipe.name)],
             ),
-          )
-        ],
-      ),
+          ),
+        ),
+        const SizedBox(height: 18),
+        const Text('Recipe caterories'),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: recipeCategories.length,
+          itemBuilder: (context, index) => InkWell(
+            onTap: () {
+              context.go('/category/recipes/$index');
+            },
+            child: Row(
+              children: [
+                const Text(
+                  "\u2022",
+                  style: TextStyle(fontSize: 30),
+                ),
+                Text(recipeCategories[index].name)
+              ],
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: () => context.go('/category'),
+          child: const Text('Go to categories'),
+        ),
+      ],
     );
   }
 }

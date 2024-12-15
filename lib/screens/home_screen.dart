@@ -27,7 +27,7 @@ class HomeScreen extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list_rounded),
-            label: 'Random',
+            label: 'Recipe',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.category_sharp),

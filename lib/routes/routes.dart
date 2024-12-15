@@ -1,8 +1,8 @@
 import 'package:go_router/go_router.dart';
-import 'package:recipe_application/models/dummy_data.dart';
 import 'package:recipe_application/screens/home_screen.dart';
 import 'package:recipe_application/screens/main_screen.dart';
 import 'package:recipe_application/screens/recipe_category_screen.dart';
+import 'package:recipe_application/screens/recipe_list_screen.dart';
 import 'package:recipe_application/screens/recipe_screen.dart';
 
 final router = GoRouter(
@@ -19,8 +19,17 @@ final router = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
+              redirect: (context, state) =>
+                  '/recipe/${state.pathParameters['id']}',
               path: '/recipe',
-              builder: (context, state) => RecipeScreen(recipe: featuredRecipe),
+              routes: [
+                GoRoute(
+                  path: ':id',
+                  builder: (context, state) => RecipeScreen(
+                    recipeId: state.pathParameters['id']!,
+                  ),
+                )
+              ],
             ),
           ],
         ),
@@ -29,6 +38,14 @@ final router = GoRouter(
             GoRoute(
               path: '/category',
               builder: (context, state) => const RecipeCategoryScreen(),
+              routes: [
+                GoRoute(
+                  path: 'recipes/:id',
+                  builder: (context, state) => RecipeListScreen(
+                    categoryId: state.pathParameters['id']!,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
