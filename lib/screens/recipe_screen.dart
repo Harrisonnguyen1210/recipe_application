@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_application/models/dummy_data.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:recipe_application/states/states.dart';
 
-class RecipeScreen extends StatelessWidget {
+class RecipeScreen extends ConsumerWidget {
   final String recipeId;
 
   const RecipeScreen({
@@ -10,15 +11,26 @@ class RecipeScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final recipe = featuredRecipe;
-    return Column(
-      children: [
-        const Placeholder(fallbackHeight: 200),
-        Text(recipe.name),
-        ...recipe.ingredients.map((ingredient) => Text(ingredient)),
-        ...recipe.steps.map((step) => Text(step)),
-      ],
+  Widget build(BuildContext context, WidgetRef ref) {
+    return FutureBuilder(
+      future: ref.read(firestoreServiceProvider).getRecipeById(recipeId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          final recipe = snapshot.data;
+          if (recipe == null) {
+            return Text('No recipe is found');
+          }
+          return Column(
+            children: [
+              const Placeholder(fallbackHeight: 200),
+              Text(recipe.name),
+              ...recipe.ingredients.map((ingredient) => Text(ingredient)),
+              ...recipe.steps.map((step) => Text(step)),
+            ],
+          );
+        }
+        return CircularProgressIndicator();
+      },
     );
   }
 }
