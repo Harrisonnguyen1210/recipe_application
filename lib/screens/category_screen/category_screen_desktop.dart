@@ -38,21 +38,24 @@ class CategoryScreenDesktop extends HookConsumerWidget {
                         .read(recipesProvider.notifier)
                         .loadRecipes(selectedCategory.value.categoryId);
                   },
-                  child: Container(
-                    color: category == selectedCategory.value
-                        ? Colors.blue.shade100
-                        : null,
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      category.name,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: category == selectedCategory.value
-                            ? FontWeight.bold
-                            : FontWeight.normal,
-                        color: category == selectedCategory.value
-                            ? Colors.blue
-                            : Colors.black,
+                  child: ListTile(
+                    leading: SizedBox(width: 80, child: Placeholder()),
+                    title: Container(
+                      color: category == selectedCategory.value
+                          ? Colors.blue.shade100
+                          : null,
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        category.name,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: category == selectedCategory.value
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          color: category == selectedCategory.value
+                              ? Colors.blue
+                              : Colors.black,
+                        ),
                       ),
                     ),
                   ),

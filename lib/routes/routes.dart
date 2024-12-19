@@ -19,10 +19,20 @@ final router = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              redirect: (context, state) =>
-                  '/recipe/${state.pathParameters['id']}',
+              redirect: (context, state) {
+                if (state.pathParameters['id'] == null) {
+                  return '/recipe/featuredRecipe';
+                }
+                return '/recipe/${state.pathParameters['id']}';
+              },
               path: '/recipe',
               routes: [
+                GoRoute(
+                  path: 'featuredRecipe',
+                  builder: (context, state) => RecipeScreen(
+                    recipeId: 'featuredRecipe',
+                  ),
+                ),
                 GoRoute(
                   path: ':id',
                   builder: (context, state) => RecipeScreen(

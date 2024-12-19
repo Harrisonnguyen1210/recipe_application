@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:recipe_application/states/states.dart';
 
-class RecipeScreen extends ConsumerWidget {
+class RecipeScreen extends HookConsumerWidget {
   final String recipeId;
 
   const RecipeScreen({
@@ -12,8 +13,18 @@ class RecipeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final newRecipeId = useState(recipeId);
+    useEffect(() {
+      if (recipeId == 'featuredRecipe') {
+        newRecipeId.value =
+            ref.read(featuredRecipeProvider).value?.recipeId ?? '';
+      }
+      return;
+    }, const []);
+
     return FutureBuilder(
-      future: ref.read(firestoreServiceProvider).getRecipeById(recipeId),
+      future:
+          ref.read(firestoreServiceProvider).getRecipeById(newRecipeId.value),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           final recipe = snapshot.data;
