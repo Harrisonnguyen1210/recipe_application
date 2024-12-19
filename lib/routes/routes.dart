@@ -4,16 +4,34 @@ import 'package:recipe_application/screens/home_screen.dart';
 import 'package:recipe_application/screens/main_screen.dart';
 import 'package:recipe_application/screens/recipe_list_screen.dart';
 import 'package:recipe_application/screens/recipe_screen.dart';
+import 'package:recipe_application/screens/recipe_search_screen.dart';
 
 final router = GoRouter(
   routes: [
+    GoRoute(
+      path: '/recipes',
+      builder: (context, state) => RecipeSearchScreen(
+        searchText: state.uri.queryParameters['filter'],
+      ),
+    ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) =>
           HomeScreen(tabView: navigationShell),
       branches: <StatefulShellBranch>[
         StatefulShellBranch(
           routes: [
-            GoRoute(path: '/', builder: (context, state) => const MainScreen()),
+            GoRoute(
+              path: '/',
+              builder: (context, state) => const MainScreen(),
+              // routes: [
+              //   GoRoute(
+              //     path: 'recipes',
+              //     builder: (context, state) => RecipeSearchScreen(
+              //       searchText: state.uri.queryParameters['filter'],
+              //     ),
+              //   ),
+              // ],
+            ),
           ],
         ),
         StatefulShellBranch(
@@ -23,7 +41,7 @@ final router = GoRouter(
                 if (state.pathParameters['id'] == null) {
                   return '/recipe/featuredRecipe';
                 }
-                return '/recipe/${state.pathParameters['id']}';
+                return null;
               },
               path: '/recipe',
               routes: [
