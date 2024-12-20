@@ -23,8 +23,12 @@ class RecipeListScreen extends ConsumerWidget {
             return ListView.builder(
               itemCount: recipeList.length,
               itemBuilder: (context, index) => InkWell(
-                onTap: () =>
-                    context.go('/recipe/${recipeList[index].recipeId}'),
+                onTap: () {
+                  ref
+                      .read(recipeSearchProvider.notifier)
+                      .loadRecipe(recipeList[index]);
+                  context.go('/recipes');
+                },
                 child: Row(
                   children: [
                     Text(recipeList[index].name),

@@ -20,6 +20,7 @@ dependencies:
   cloud_firestore: ^5.5.1
   hooks_riverpod: ^2.6.1
   flutter_hooks: ^0.20.5
+  firebase_auth: ^5.3.4
 
 dev_dependencies:
   flutter_test:

@@ -25,7 +25,12 @@ class MainScreen extends ConsumerWidget {
               const Text('Feature Recipe'),
               Card(
                 child: InkWell(
-                  onTap: () => context.go('/recipe/${featureRecipe.recipeId}'),
+                  onTap: () {
+                    ref
+                        .read(recipeSearchProvider.notifier)
+                        .loadRecipe(featureRecipe);
+                    context.go('/recipes');
+                  },
                   child: Column(
                     children: [Text(featureRecipe.name)],
                   ),

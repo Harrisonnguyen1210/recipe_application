@@ -4,6 +4,7 @@ class Recipe {
   String? imageUrl;
   List<String> ingredients;
   List<String> steps;
+  String categoryId;
 
   Recipe({
     required this.recipeId,
@@ -11,6 +12,7 @@ class Recipe {
     this.imageUrl,
     required this.ingredients,
     required this.steps,
+    required this.categoryId,
   });
 
   factory Recipe.fromFirestore(Map<String, dynamic> data, String id) {
@@ -22,6 +24,7 @@ class Recipe {
           .map((e) => e as String)
           .toList(),
       steps: (data['steps'] as List<dynamic>).map((e) => e as String).toList(),
+      categoryId: data['categoryId'],
     );
   }
 
@@ -31,6 +34,7 @@ class Recipe {
       'imageUrl': imageUrl,
       'ingredients': ingredients,
       'steps': steps,
+      'categoryId': categoryId,
     };
   }
 }

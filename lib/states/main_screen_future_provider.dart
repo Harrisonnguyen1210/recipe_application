@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:recipe_application/models/models.dart';
-import 'package:recipe_application/states/firestore_provider.dart';
+import 'package:recipe_application/states/states.dart';
 
 final mainScreenFutureProvider = FutureProvider<List<dynamic>>((ref) async {
   final featuredRecipe = ref.watch(featuredRecipeProvider.future);
@@ -11,8 +11,7 @@ final mainScreenFutureProvider = FutureProvider<List<dynamic>>((ref) async {
 });
 
 final featuredRecipeProvider = FutureProvider<Recipe>((ref) async {
-  final firestoreService = ref.read(firestoreServiceProvider);
-  final recipes = await firestoreService.getAllRecipes();
+  final recipes = ref.watch(recipesProvider);
   final random = Random().nextInt(recipes.length);
   return recipes[random];
 });

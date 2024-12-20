@@ -12,14 +12,9 @@ class CategoryScreenDesktop extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedCategory = useState(categories[0]);
-    final recipes = ref.watch(recipesProvider);
-
-    useEffect(() {
-      ref
-          .read(recipesProvider.notifier)
-          .loadRecipes(selectedCategory.value.categoryId);
-      return;
-    }, const []);
+    final recipes = ref
+        .watch(recipesProvider.notifier)
+        .getRecipesByCategoryId(selectedCategory.value.categoryId);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Categories & Recipes')),
@@ -34,9 +29,6 @@ class CategoryScreenDesktop extends HookConsumerWidget {
                 return GestureDetector(
                   onTap: () {
                     selectedCategory.value = category;
-                    ref
-                        .read(recipesProvider.notifier)
-                        .loadRecipes(selectedCategory.value.categoryId);
                   },
                   child: ListTile(
                     leading: SizedBox(width: 80, child: Placeholder()),
@@ -63,33 +55,27 @@ class CategoryScreenDesktop extends HookConsumerWidget {
               },
             ),
           ),
-          recipes.when(
-            data: (data) {
-              return Expanded(
-                flex: 2,
-                child: data.isNotEmpty
-                    ? ListView.builder(
-                        itemCount: data.length,
-                        itemBuilder: (context, index) {
-                          final recipe = data[index];
-                          return Card(
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 4, horizontal: 8),
-                            child: ListTile(
-                              title: Text(recipe.name),
-                              onTap: () =>
-                                  context.go('/recipe/${recipe.recipeId}'),
-                            ),
-                          );
-                        },
-                      )
-                    : const Center(
-                        child: Text('No recipes available for this category.'),
-                      ),
-              );
-            },
-            error: (error, stackTrace) => Text('Error please try again'),
-            loading: () => Center(child: CircularProgressIndicator()),
+          Expanded(
+            flex: 2,
+            child: ListView.builder(
+              itemCount: recipes.length,
+              itemBuilder: (context, index) {
+                final recipe = recipes[index];
+                return Card(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  child: ListTile(
+                    title: Text(recipe.name),
+                    onTap: () {
+                      ref
+                          .read(recipeSearchProvider.notifier)
+                          .loadRecipe(recipe);
+                      context.go('/recipes');
+                    },
+                  ),
+                );
+              },
+            ),
           )
         ],
       ),

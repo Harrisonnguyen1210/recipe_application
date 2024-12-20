@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:recipe_application/states/states.dart';
 
-class CustomAppBar extends HookWidget implements PreferredSizeWidget {
-  final String? searchText;
+class CustomAppBar extends HookConsumerWidget implements PreferredSizeWidget {
   final Widget? leadingWidget;
-  const CustomAppBar({super.key, this.searchText, this.leadingWidget});
+  const CustomAppBar({super.key, this.leadingWidget});
 
   @override
-  Widget build(BuildContext context) {
-    final searchController = useTextEditingController(text: searchText);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final searchController = useTextEditingController();
 
     return AppBar(
       actions: [
@@ -20,7 +21,10 @@ class CustomAppBar extends HookWidget implements PreferredSizeWidget {
               hintText: 'Search recipes',
               leading: Icon(Icons.search),
               onSubmitted: (value) {
-                context.go('/recipes?filter=$value');
+                ref
+                    .read(recipeSearchProvider.notifier)
+                    .loadSearchRecipes(value);
+                context.go('/recipes');
                 searchController.clear();
               },
             ))
