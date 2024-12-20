@@ -23,14 +23,6 @@ final router = GoRouter(
             GoRoute(
               path: '/',
               builder: (context, state) => const MainScreen(),
-              // routes: [
-              //   GoRoute(
-              //     path: 'recipes',
-              //     builder: (context, state) => RecipeSearchScreen(
-              //       searchText: state.uri.queryParameters['filter'],
-              //     ),
-              //   ),
-              // ],
             ),
           ],
         ),
