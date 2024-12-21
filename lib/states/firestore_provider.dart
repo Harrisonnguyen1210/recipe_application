@@ -46,4 +46,8 @@ class FirestoreService {
         .map((doc) => Category.fromFirestore(doc.data(), doc.id))
         .toList();
   }
+
+  Future<void> addRecipe(Map<String, Object?> data) async {
+    await firestore.collection('recipes').add(data);
+  }
 }

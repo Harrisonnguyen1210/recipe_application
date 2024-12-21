@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -28,30 +27,36 @@ class CustomAppBar extends HookConsumerWidget implements PreferredSizeWidget {
             },
           ),
         ),
-        _buildLoginLogoutButton(context, user, ref)
+        if (user == null)
+          TextButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Sign in'),
+                  content: const Text('Please sign in'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => context.pop(),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        context.pop();
+                        ref
+                            .read(userAutnenticationProvider.notifier)
+                            .signInAnonymously();
+                      },
+                      child: const Text('Login anonymously'),
+                    ),
+                  ],
+                ),
+              );
+            },
+            child: Text('Sign in'),
+          )
       ],
       title: const Text('Recipe Application'),
-    );
-  }
-
-  Widget _buildLoginLogoutButton(
-    BuildContext context,
-    User? user,
-    WidgetRef ref,
-  ) {
-    if (user != null) {
-      return TextButton(
-        onPressed: () {
-          ref.read(userAutnenticationProvider.notifier).signOutAnonymously();
-        },
-        child: Text('Sign out'),
-      );
-    }
-    return TextButton(
-      onPressed: () {
-        context.go('/login');
-      },
-      child: Text('Sign in'),
     );
   }
 

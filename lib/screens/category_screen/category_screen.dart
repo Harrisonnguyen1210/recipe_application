@@ -10,22 +10,19 @@ class CategoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return FutureBuilder(
-      future: ref.read(firestoreServiceProvider).getAllCategories(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          final categoryList = snapshot.data;
-
-          if (categoryList == null) {
-            return Text('No category is found');
-          }
-          return ResponsiveWidget(
-            mobile: CategoryScreenMobile(categories: categoryList),
-            desktop: CategoryScreenDesktop(categories: categoryList),
-          );
+    final categories = ref.watch(categoriesFutureProvider);
+    return categories.when(
+      data: (categoryList) {
+        if (categoryList.isEmpty) {
+          return Text('No category is found');
         }
-        return CircularProgressIndicator();
+        return ResponsiveWidget(
+          mobile: CategoryScreenMobile(categories: categoryList),
+          desktop: CategoryScreenDesktop(categories: categoryList),
+        );
       },
+      loading: () => Center(child: CircularProgressIndicator()),
+      error: (error, stackTrace) => Text('Error: $error'),
     );
   }
 }

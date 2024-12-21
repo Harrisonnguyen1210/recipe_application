@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:recipe_application/states/states.dart';
+import 'package:recipe_application/widgets/app_drawer.dart';
 import 'package:recipe_application/widgets/appbar.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key, required this.tabView});
   final StatefulNavigationShell tabView;
 
@@ -14,7 +17,9 @@ class HomeScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userAutnenticationProvider);
+
     return Scaffold(
       appBar: const CustomAppBar(),
       bottomNavigationBar: BottomNavigationBar(
@@ -36,6 +41,7 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: tabView,
+      drawer: user != null ? AppDrawer(ref: ref) : null,
     );
   }
 }

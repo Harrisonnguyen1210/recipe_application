@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:recipe_application/screens/add_recipe_screen.dart';
 import 'package:recipe_application/screens/category_screen/category_screen.dart';
 import 'package:recipe_application/screens/home_screen.dart';
 import 'package:recipe_application/screens/login_screen.dart';
@@ -11,6 +12,10 @@ final router = GoRouter(
     GoRoute(
       path: '/login',
       builder: (context, state) => LoginScreen(),
+    ),
+    GoRoute(
+      path: '/addRecipe',
+      builder: (context, state) => AddRecipeScreen(),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) =>
