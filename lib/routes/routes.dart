@@ -6,12 +6,19 @@ import 'package:recipe_application/screens/home_screen.dart';
 import 'package:recipe_application/screens/main_screen.dart';
 import 'package:recipe_application/screens/recipe_list_screen.dart';
 import 'package:recipe_application/screens/recipe_screen.dart';
+import 'package:recipe_application/screens/update_recipe_screen.dart';
 
 final router = GoRouter(
   routes: [
     GoRoute(
       path: '/addRecipe',
       builder: (context, state) => AddRecipeScreen(),
+    ),
+    GoRoute(
+      path: '/updateRecipe/:id',
+      builder: (context, state) => UpdateRecipeScreen(
+        recipeId: state.pathParameters['id']!,
+      ),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) =>

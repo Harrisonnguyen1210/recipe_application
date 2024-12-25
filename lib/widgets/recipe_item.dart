@@ -103,27 +103,27 @@ class RecipeItem extends HookConsumerWidget {
                           child: CircularProgressIndicator(),
                         ),
                       ),
-                      if (recipe.userId == user.uid)
-                        PopupMenuButton<String>(
-                          icon: const Icon(Icons.more_vert),
-                          onSelected: (value) {
-                            if (value == 'edit') {
-                              context.go('/addRecipe');
-                            } else if (value == 'delete') {
-                              _deleteRecipe(context, ref, recipe.recipeId);
-                            }
-                          },
-                          itemBuilder: (context) => [
-                            const PopupMenuItem(
-                              value: 'edit',
-                              child: Text('Edit'),
-                            ),
-                            const PopupMenuItem(
-                              value: 'delete',
-                              child: Text('Delete'),
-                            ),
-                          ],
-                        ),
+                      // if (recipe.userId == user.uid)
+                      PopupMenuButton<String>(
+                        icon: const Icon(Icons.more_vert),
+                        onSelected: (value) {
+                          if (value == 'edit') {
+                            context.go('/updateRecipe/${recipe.recipeId}');
+                          } else if (value == 'delete') {
+                            _deleteRecipe(context, ref, recipe.recipeId);
+                          }
+                        },
+                        itemBuilder: (context) => [
+                          const PopupMenuItem(
+                            value: 'edit',
+                            child: Text('Edit'),
+                          ),
+                          const PopupMenuItem(
+                            value: 'delete',
+                            child: Text('Delete'),
+                          ),
+                        ],
+                      ),
                     ],
                   )
                 : SizedBox.shrink(),
