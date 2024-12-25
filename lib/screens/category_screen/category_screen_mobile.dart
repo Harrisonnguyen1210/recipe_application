@@ -13,7 +13,7 @@ class CategoryScreenMobile extends ConsumerWidget {
       itemBuilder: (context, index) {
         return Row(
           children: [
-            const Placeholder(fallbackHeight: 150, fallbackWidth: 150),
+            const Icon(Icons.image_not_supported, size: 100),
             InkWell(
                 onTap: () => context
                     .go('/category/recipes/${categories[index].categoryId}'),

@@ -38,6 +38,7 @@ class AppDrawer extends StatelessWidget {
                     TextButton(
                       onPressed: () {
                         context.pop();
+                        context.pop();
                         ref
                             .read(userAutnenticationProvider.notifier)
                             .signOutAnonymously();

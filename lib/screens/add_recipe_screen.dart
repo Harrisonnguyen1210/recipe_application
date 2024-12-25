@@ -26,6 +26,7 @@ class AddRecipeScreen extends HookConsumerWidget {
         'steps': steps.value,
         'categoryId': selectedCategory.value?.categoryId,
         'imageUrl': '',
+        'userId': ref.read(userAutnenticationProvider)?.uid,
       };
 
       ref.read(firestoreServiceProvider).addRecipe(recipeData);
@@ -61,7 +62,7 @@ class AddRecipeScreen extends HookConsumerWidget {
                 validator: (value) => value == null || value.isEmpty
                     ? 'Please enter a recipe name'
                     : null,
-                onSaved: (value) => recipeName.value = value!,
+                onChanged: (value) => recipeName.value = value,
               ),
               const SizedBox(height: 16),
               TextFormField(

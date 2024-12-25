@@ -50,4 +50,8 @@ class FirestoreService {
   Future<void> addRecipe(Map<String, Object?> data) async {
     await firestore.collection('recipes').add(data);
   }
+
+  Future<void> deleteRecipe(String recipeId) async {
+    await firestore.collection('recipes').doc(recipeId).delete();
+  }
 }

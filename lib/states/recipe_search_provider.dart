@@ -35,4 +35,9 @@ class RecipeSearchNotifier extends StateNotifier<List<Recipe>> {
   void loadRecipe(Recipe recipe) {
     state = [recipe];
   }
+
+  void deleteRecipe(String recipeId) {
+    ref.read(firestoreServiceProvider).deleteRecipe(recipeId);
+    state = state.where((recipe) => recipe.recipeId != recipeId).toList();
+  }
 }

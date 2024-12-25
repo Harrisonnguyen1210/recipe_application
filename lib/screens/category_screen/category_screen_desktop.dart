@@ -12,8 +12,9 @@ class CategoryScreenDesktop extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedCategory = useState(categories[0]);
+    ref.watch(recipesProvider);
     final recipes = ref
-        .watch(recipesProvider.notifier)
+        .read(recipesProvider.notifier)
         .getRecipesByCategoryId(selectedCategory.value.categoryId);
 
     return Scaffold(
@@ -31,7 +32,7 @@ class CategoryScreenDesktop extends HookConsumerWidget {
                     selectedCategory.value = category;
                   },
                   child: ListTile(
-                    leading: SizedBox(width: 80, child: Placeholder()),
+                    leading: Icon(Icons.image_not_supported, size: 50),
                     title: Container(
                       color: category == selectedCategory.value
                           ? Colors.blue.shade100
