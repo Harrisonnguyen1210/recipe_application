@@ -103,7 +103,7 @@ class RecipeItem extends HookConsumerWidget {
                           child: CircularProgressIndicator(),
                         ),
                       ),
-                      // if (recipe.userId == user.uid)
+                      if (recipe.userId == user.uid)
                       PopupMenuButton<String>(
                         icon: const Icon(Icons.more_vert),
                         onSelected: (value) {
