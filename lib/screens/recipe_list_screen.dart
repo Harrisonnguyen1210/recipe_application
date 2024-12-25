@@ -37,7 +37,7 @@ class RecipeListScreen extends ConsumerWidget {
               ),
             );
           }
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         });
   }
 }

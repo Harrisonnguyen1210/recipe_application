@@ -5,39 +5,42 @@ import 'package:recipe_application/models/models.dart';
 import 'package:recipe_application/states/states.dart';
 
 final recipeSearchProvider =
-    StateNotifierProvider<RecipeSearchNotifier, List<Recipe>>((ref) {
+    StateNotifierProvider<RecipeSearchNotifier, AsyncValue<List<Recipe>>>(
+        (ref) {
   final recipes = ref.watch(recipesProvider);
 
   return RecipeSearchNotifier(ref, recipes);
 });
 
-class RecipeSearchNotifier extends StateNotifier<List<Recipe>> {
+class RecipeSearchNotifier extends StateNotifier<AsyncValue<List<Recipe>>> {
   final Ref ref;
   List<Recipe> recipes;
 
-  RecipeSearchNotifier(this.ref, this.recipes) : super([]) {
+  RecipeSearchNotifier(this.ref, this.recipes) : super(AsyncValue.loading()) {
     loadSearchRecipes(null);
   }
 
   void loadSearchRecipes(String? searchText) async {
+    AsyncValue.loading();
     if (recipes.isEmpty) return;
     if (searchText == null) {
       final random = Random().nextInt(recipes.length);
-      state = [recipes[random]];
+      state = AsyncValue.data([recipes[random]]);
     } else {
-      state = ref
+      state = AsyncValue.data(ref
           .read(recipesProvider)
           .where((recipe) => recipe.name.toLowerCase().contains(searchText))
-          .toList();
+          .toList());
     }
   }
 
   void loadRecipe(Recipe recipe) {
-    state = [recipe];
+    state = AsyncValue.data([recipe]);
   }
 
   void deleteRecipe(String recipeId) {
     ref.read(firestoreServiceProvider).deleteRecipe(recipeId);
-    state = state.where((recipe) => recipe.recipeId != recipeId).toList();
+    state = AsyncValue.data(
+        state.value!.where((recipe) => recipe.recipeId != recipeId).toList());
   }
 }

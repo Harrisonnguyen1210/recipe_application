@@ -6,6 +6,7 @@ import 'package:recipe_application/models/models.dart';
 import 'package:recipe_application/states/states.dart';
 
 class AddRecipeScreen extends HookConsumerWidget {
+  static final formKey = GlobalKey<FormState>();
   const AddRecipeScreen({super.key});
 
   Future<void> createRecipe(
@@ -38,7 +39,6 @@ class AddRecipeScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formKey = useMemoized(() => GlobalKey<FormState>());
     final recipeName = useState('');
     final ingredients = useState<List<String>>([]);
     final steps = useState<List<String>>([]);
@@ -180,7 +180,7 @@ class AddRecipeScreen extends HookConsumerWidget {
               const SizedBox(height: 32),
               Center(
                 child: isAddingRecipe.value
-                    ? CircularProgressIndicator()
+                    ? Center(child: CircularProgressIndicator())
                     : ElevatedButton(
                         onPressed: () => createRecipe(
                           formKey,

@@ -54,4 +54,54 @@ class FirestoreService {
   Future<void> deleteRecipe(String recipeId) async {
     await firestore.collection('recipes').doc(recipeId).delete();
   }
+
+  Future<void> toggleFavorite(
+      String recipeId, String userId, bool isFavorite) async {
+    final recipeRef = firestore.collection('recipes').doc(recipeId);
+
+    if (isFavorite) {
+      await recipeRef
+          .collection('favorites')
+          .doc(userId)
+          .set({'isFavorite': true});
+    } else {
+      await recipeRef.collection('favorites').doc(userId).delete();
+    }
+  }
+
+  Future<bool> isRecipeFavorited(String recipeId, String userId) async {
+    final favoriteDoc = await firestore
+        .collection('recipes')
+        .doc(recipeId)
+        .collection('favorites')
+        .doc(userId)
+        .get();
+
+    return favoriteDoc.exists && (favoriteDoc.data()?['isFavorite'] ?? false);
+  }
+
+  Future<int> getFavoriteCount(String recipeId) async {
+    final favorites = await firestore
+        .collection('recipes')
+        .doc(recipeId)
+        .collection('favorites')
+        .get();
+    return favorites.size;
+  }
+
+  Future<List<Recipe>> getUserFavorites(String userId) async {
+    final recipeSnapshot = await firestore.collection('recipes').get();
+
+    List<Recipe> favoriteRecipes = [];
+
+    for (var doc in recipeSnapshot.docs) {
+      final favoriteDoc =
+          await doc.reference.collection('favorites').doc(userId).get();
+      if (favoriteDoc.exists && favoriteDoc.data()?['isFavorite'] == true) {
+        favoriteRecipes.add(Recipe.fromFirestore(doc.data(), doc.id));
+      }
+    }
+
+    return favoriteRecipes;
+  }
 }

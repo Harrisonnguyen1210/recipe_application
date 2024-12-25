@@ -56,7 +56,7 @@ class CustomAppBar extends HookConsumerWidget implements PreferredSizeWidget {
             child: Text('Sign in'),
           )
       ],
-      title: const Text('Recipe Application'),
+      title: Text('Recipe Application'),
     );
   }
 

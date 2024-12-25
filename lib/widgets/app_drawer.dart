@@ -22,12 +22,20 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.favorite_outline),
+            title: const Text('Favorites'),
+            onTap: () {
+              context.pop();
+              context.go('/recipes/favorites');
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Logout'),
             onTap: () {
               showDialog(
                 context: context,
-                builder: (context) => AlertDialog(
+                builder: (dialogContext) => AlertDialog(
                   title: const Text('Logout'),
                   content: const Text('Are you sure you want to logout?'),
                   actions: [
@@ -37,11 +45,12 @@ class AppDrawer extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        context.pop();
+                        dialogContext.pop();
                         context.pop();
                         ref
                             .read(userAutnenticationProvider.notifier)
                             .signOutAnonymously();
+                        context.go('/');
                       },
                       child: const Text('Logout'),
                     ),
