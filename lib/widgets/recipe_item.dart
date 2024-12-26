@@ -66,14 +66,13 @@ class RecipeItem extends HookConsumerWidget {
                           fontSize: 16,
                         ),
                       ),
-                      SizedBox(width: 8),
                       favoriteCount.when(
                         data: (data) => Text(data > 1
-                            ? '-  Favorited by $data users'
-                            : '-  Favorited by $data user'),
+                            ? ' - Favorited by $data users'
+                            : ' - Favorited by $data user'),
                         error: (error, stackTrace) => SizedBox.shrink(),
                         loading: () => SizedBox.shrink(),
-                      )
+                      ),
                     ],
                   ),
                   const SizedBox(height: 8),

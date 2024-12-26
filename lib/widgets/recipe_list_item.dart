@@ -12,6 +12,8 @@ class RecipeListItem extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userAutnenticationProvider);
     final isFavorite = ref.watch(favoriteStatusProvider(recipe.recipeId));
+    final favoriteCount =
+        ref.watch(favoriteCountFutureProvider(recipe.recipeId));
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
@@ -26,7 +28,24 @@ class RecipeListItem extends HookConsumerWidget {
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Text(recipe.name),
+                child: Row(
+                  children: [
+                    Text(
+                      recipe.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    favoriteCount.when(
+                      data: (data) => Text(data > 1
+                          ? ' - Favorited by $data users'
+                          : ' - Favorited by $data user'),
+                      error: (error, stackTrace) => SizedBox.shrink(),
+                      loading: () => SizedBox.shrink(),
+                    ),
+                  ],
+                ),
               ),
             ),
             user != null
