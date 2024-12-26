@@ -42,6 +42,8 @@ class RecipeItem extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userAutnenticationProvider);
     final isFavorite = ref.watch(favoriteStatusProvider(recipe.recipeId));
+    final favoriteCount =
+        ref.watch(favoriteCountFutureProvider(recipe.recipeId));
 
     return Card(
       margin: const EdgeInsets.only(top: 16, left: 24, right: 24),
@@ -55,12 +57,24 @@ class RecipeItem extends HookConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    recipe.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        recipe.name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      favoriteCount.when(
+                        data: (data) => Text(data > 1
+                            ? '-  Favorited by $data users'
+                            : '-  Favorited by $data user'),
+                        error: (error, stackTrace) => SizedBox.shrink(),
+                        loading: () => SizedBox.shrink(),
+                      )
+                    ],
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -96,6 +110,8 @@ class RecipeItem extends HookConsumerWidget {
                             ref.invalidate(
                                 favoriteStatusProvider(recipe.recipeId));
                             ref.invalidate(favoriteRecipesFutureProvider);
+                            ref.invalidate(
+                                favoriteCountFutureProvider(recipe.recipeId));
                           },
                         ),
                         error: (error, _) => SizedBox.shrink(),
@@ -104,26 +120,26 @@ class RecipeItem extends HookConsumerWidget {
                         ),
                       ),
                       if (recipe.userId == user.uid)
-                      PopupMenuButton<String>(
-                        icon: const Icon(Icons.more_vert),
-                        onSelected: (value) {
-                          if (value == 'edit') {
-                            context.go('/updateRecipe/${recipe.recipeId}');
-                          } else if (value == 'delete') {
-                            _deleteRecipe(context, ref, recipe.recipeId);
-                          }
-                        },
-                        itemBuilder: (context) => [
-                          const PopupMenuItem(
-                            value: 'edit',
-                            child: Text('Edit'),
-                          ),
-                          const PopupMenuItem(
-                            value: 'delete',
-                            child: Text('Delete'),
-                          ),
-                        ],
-                      ),
+                        PopupMenuButton<String>(
+                          icon: const Icon(Icons.more_vert),
+                          onSelected: (value) {
+                            if (value == 'edit') {
+                              context.go('/updateRecipe/${recipe.recipeId}');
+                            } else if (value == 'delete') {
+                              _deleteRecipe(context, ref, recipe.recipeId);
+                            }
+                          },
+                          itemBuilder: (context) => [
+                            const PopupMenuItem(
+                              value: 'edit',
+                              child: Text('Edit'),
+                            ),
+                            const PopupMenuItem(
+                              value: 'delete',
+                              child: Text('Delete'),
+                            ),
+                          ],
+                        ),
                     ],
                   )
                 : SizedBox.shrink(),

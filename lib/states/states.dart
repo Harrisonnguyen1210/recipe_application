@@ -1,4 +1,5 @@
 export 'categories_provider.dart';
+export 'favorite_count_future_provider.dart';
 export 'favorite_status_provider.dart';
 export 'favorite_recipes_future_provider.dart';
 export 'firestore_provider.dart';
