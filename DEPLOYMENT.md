@@ -2,4 +2,4 @@
 
 Write the URL where your application is deployed below.
 
-TODO: URL
+Deployment URL: https://harrisonnguyen1210.github.io/recipe_application_deploy/
