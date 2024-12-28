@@ -28,7 +28,8 @@ class RecipeListItem extends HookConsumerWidget {
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       recipe.name,
@@ -37,10 +38,11 @@ class RecipeListItem extends HookConsumerWidget {
                         fontSize: 16,
                       ),
                     ),
+                    SizedBox(height: 8),
                     favoriteCount.when(
                       data: (data) => Text(data > 1
-                          ? ' - Favorited by $data users'
-                          : ' - Favorited by $data user'),
+                          ? 'Favorited by $data users'
+                          : 'Favorited by $data user'),
                       error: (error, stackTrace) => SizedBox.shrink(),
                       loading: () => SizedBox.shrink(),
                     ),

@@ -36,3 +36,58 @@ During the project development, there are challenges and learning moments as bel
 - hooks_riverpod: ^2.6.1
 - flutter_hooks: ^0.20.5
 - firebase_auth: ^5.3.4
+
+# Structure of Firebase database
+
+The database is structured into two main collections: "categories" and "recipes":
+
+1. Categories Collection
+
+- name (String): Name of the category.
+
+Example:
+```
+{
+  "name": "Asian"
+}
+```
+
+2. Recipes Collection
+
+- name (String): Name of the recipe.
+- categoryId (String): Reference to the ID of the category this recipe belongs to.
+- ingredients (array of Strings): List of ingredients required for the recipe.
+- steps (Array of Strings): List of steps to prepare the recipe.
+- userId (String): ID of the user who created the recipe.
+- favorites: subcollection, contains data about users who favorited the recipe.
+
+Example:
+
+```
+{
+  "name": "Pad Thai",
+  "categoryId": "bteVDf5favqD1hjWUfK1",
+  "ingredients": [
+    "200g rice noodles",
+    "150g shrimp or chicken"
+  ],
+  "steps": [
+    "Soak the rice noodles in warm water for 30 minutes, then drain.",
+    "Heat vegetable oil in a wok or large frying pan over medium heat."
+  ],
+  "userId": "c9lztwtijdQZagUiRmsQf55BS32"
+}
+```
+
+3. Favorites subcollection
+- The document ID is unique for each user marking the recipe as a favorite. It often represents the user's unique ID (userId).
+
+- isFavorite (Boolean): Indicates whether the recipe is marked as a favorite by the specific user.
+
+Example:
+
+```
+{
+  "isFavorite": true
+}
+```

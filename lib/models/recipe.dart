@@ -1,7 +1,6 @@
 class Recipe {
   String recipeId;
   String name;
-  String? imageUrl;
   List<String> ingredients;
   List<String> steps;
   String categoryId;
@@ -10,7 +9,6 @@ class Recipe {
   Recipe({
     required this.recipeId,
     required this.name,
-    this.imageUrl,
     required this.ingredients,
     required this.steps,
     required this.categoryId,
@@ -21,7 +19,6 @@ class Recipe {
     return Recipe(
       recipeId: id,
       name: data['name'],
-      imageUrl: data['imageUrl'],
       ingredients: (data['ingredients'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
@@ -34,7 +31,6 @@ class Recipe {
   Map<String, dynamic> toFirestore() {
     return {
       'name': name,
-      'imageUrl': imageUrl,
       'ingredients': ingredients,
       'steps': steps,
       'categoryId': categoryId,

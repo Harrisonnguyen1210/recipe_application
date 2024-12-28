@@ -35,7 +35,7 @@ class CategoryScreenDesktop extends HookConsumerWidget {
                     leading: Icon(Icons.image_not_supported, size: 50),
                     title: Container(
                       color: category == selectedCategory.value
-                          ? Colors.blue.shade100
+                          ? Theme.of(context).colorScheme.primaryContainer
                           : null,
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
@@ -46,7 +46,7 @@ class CategoryScreenDesktop extends HookConsumerWidget {
                               ? FontWeight.bold
                               : FontWeight.normal,
                           color: category == selectedCategory.value
-                              ? Colors.blue
+                              ? Theme.of(context).colorScheme.primary
                               : Colors.black,
                         ),
                       ),

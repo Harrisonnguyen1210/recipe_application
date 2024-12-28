@@ -28,7 +28,6 @@ class UpdateRecipeScreen extends HookConsumerWidget {
         'ingredients': ingredients.value,
         'steps': steps.value,
         'categoryId': selectedCategory.value?.categoryId,
-        'imageUrl': '',
         'userId': ref.read(userAutnenticationProvider)?.uid,
       };
 

@@ -9,19 +9,26 @@ class CategoryScreenMobile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return Row(
-          children: [
-            const Icon(Icons.image_not_supported, size: 100),
-            InkWell(
-                onTap: () => context
-                    .go('/category/recipes/${categories[index].categoryId}'),
-                child: Text(categories[index].name)),
-          ],
-        );
-      },
-      itemCount: categories.length,
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: ListView.builder(
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: InkWell(
+              onTap: () => context
+                  .go('/category/recipes/${categories[index].categoryId}'),
+              child: Row(
+                children: [
+                  const Icon(Icons.image_not_supported, size: 100),
+                  Text(categories[index].name),
+                ],
+              ),
+            ),
+          );
+        },
+        itemCount: categories.length,
+      ),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -41,7 +42,7 @@ class CustomAppBar extends HookConsumerWidget implements PreferredSizeWidget {
     BuildContext context,
     WidgetRef ref,
     TextEditingController searchController,
-    dynamic user,
+    User? user,
   ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -82,7 +83,7 @@ class CustomAppBar extends HookConsumerWidget implements PreferredSizeWidget {
     BuildContext context,
     WidgetRef ref,
     TextEditingController searchController,
-    dynamic user,
+    User? user,
   ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
