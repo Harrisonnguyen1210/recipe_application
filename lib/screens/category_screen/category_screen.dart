@@ -18,6 +18,7 @@ class CategoryScreen extends ConsumerWidget {
         }
         return ResponsiveWidget(
           mobile: CategoryScreenMobile(categories: categoryList),
+          tablet: CategoryScreenDesktop(categories: categoryList),
           desktop: CategoryScreenDesktop(categories: categoryList),
         );
       },

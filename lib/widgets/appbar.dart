@@ -18,6 +18,7 @@ class CustomAppBar extends HookConsumerWidget implements PreferredSizeWidget {
       elevation: 2,
       title: ResponsiveWidget(
         mobile: _buildMobileAppBar(context, ref, searchController, user),
+        tablet: _buildDesktopAppBar(context, ref, searchController, user),
         desktop: _buildDesktopAppBar(context, ref, searchController, user),
       ),
     );
