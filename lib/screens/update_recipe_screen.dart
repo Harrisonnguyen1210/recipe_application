@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -20,6 +21,7 @@ class UpdateRecipeScreen extends HookConsumerWidget {
     ValueNotifier<bool> isAddingRecipe,
     WidgetRef ref,
     BuildContext context,
+    User? user,
   ) async {
     if (formKey.currentState!.validate()) {
       isAddingRecipe.value = true;
@@ -28,7 +30,7 @@ class UpdateRecipeScreen extends HookConsumerWidget {
         'ingredients': ingredients.value,
         'steps': steps.value,
         'categoryId': selectedCategory.value?.categoryId,
-        'userId': ref.read(userAutnenticationProvider)?.uid,
+        'userId': user?.uid,
       };
 
       ref.read(firestoreServiceProvider).updateRecipe(recipeData, recipeId);
@@ -39,10 +41,80 @@ class UpdateRecipeScreen extends HookConsumerWidget {
     }
   }
 
+  Widget _buildTextField({
+    required String label,
+    required Function(String) onChanged,
+    required String? Function(String?) validator,
+    String? initialValue,
+  }) {
+    return TextFormField(
+      initialValue: initialValue,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+      ),
+      onChanged: onChanged,
+      validator: validator,
+    );
+  }
+
+  Widget _buildAddableList({
+    required String label,
+    required TextEditingController controller,
+    required List<String> items,
+    required Function(String) onAdd,
+    required Function(String) onDelete,
+    required BuildContext context,
+    required String? Function(String?) validator,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextFormField(
+          controller: controller,
+          validator: validator,
+          decoration: InputDecoration(
+            labelText: label,
+            suffixIcon: IconButton(
+              icon: Icon(
+                Icons.add,
+              ),
+              onPressed: () {
+                if (controller.text.isNotEmpty) {
+                  onAdd(controller.text);
+                  controller.clear();
+                }
+              },
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Wrap(
+          spacing: 8.0,
+          runSpacing: 8.0,
+          children: items.map((item) {
+            return Chip(
+              label: Text(item),
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+              deleteIcon: const Icon(Icons.close),
+              onDeleted: () => onDelete(item),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final recipes = ref.watch(recipesProvider);
     final categories = ref.watch(categoriesFutureProvider);
+    final user = ref.watch(userAutnenticationProvider);
 
     if (recipes.isEmpty || categories.value == null) {
       return Center(child: CircularProgressIndicator());
@@ -60,154 +132,139 @@ class UpdateRecipeScreen extends HookConsumerWidget {
     final isAddingRecipe = useState(false);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Update Recipe')),
+      appBar: AppBar(
+        title: const Text('Update Recipe'),
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        elevation: 2,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go('/'),
+        ),
+      ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFormField(
-                initialValue: recipeName.value,
-                decoration: const InputDecoration(labelText: 'Recipe Name'),
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Please enter a recipe name'
-                    : null,
-                onChanged: (value) => recipeName.value = value,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: ingredientController,
-                validator: (value) {
-                  if (ingredients.value.isEmpty) {
-                    return 'Please add an ingredient';
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  labelText: 'Add Ingredient',
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: () {
-                      if (ingredientController.text.isNotEmpty) {
-                        ingredients.value = [
-                          ...ingredients.value,
-                          ingredientController.text,
-                        ];
-                        ingredientController.clear();
-                      }
-                    },
-                  ),
-                ),
-              ),
-              Column(
+        padding: const EdgeInsets.all(24.0),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 900),
+            child: Form(
+              key: formKey,
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: ingredients.value
-                    .map(
-                      (ingredient) => Padding(
-                        padding: const EdgeInsets.only(top: 16.0),
-                        child: Chip(
-                          label: Text(ingredient),
-                          onDeleted: () {
-                            ingredients.value = List.from(ingredients.value)
-                              ..remove(ingredient);
-                          },
-                        ),
-                      ),
-                    )
-                    .toList(),
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: stepController,
-                validator: (value) {
-                  if (steps.value.isEmpty) {
-                    return 'Please add a step';
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  labelText: 'Add Step',
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: () {
-                      if (stepController.text.isNotEmpty) {
-                        steps.value = [
-                          ...steps.value,
-                          stepController.text,
-                        ];
-                        stepController.clear();
-                      }
-                    },
+                children: [
+                  _buildTextField(
+                    label: 'Recipe Name',
+                    onChanged: (value) => recipeName.value = value,
+                    validator: (value) => value == null || value.isEmpty
+                        ? 'Please enter a recipe name'
+                        : null,
+                    initialValue: recipeName.value,
                   ),
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: steps.value
-                    .map(
-                      (step) => Padding(
-                        padding: const EdgeInsets.only(top: 16.0),
-                        child: Chip(
-                          label: Text(step),
-                          onDeleted: () {
-                            steps.value = List.from(steps.value)..remove(step);
-                          },
-                        ),
-                      ),
-                    )
-                    .toList(),
-              ),
-              const SizedBox(height: 16),
-              const Text('Select Categories'),
-              const SizedBox(height: 16),
-              categories.when(
-                data: (data) {
-                  selectedCategory.value ??= data.first;
-                  return Wrap(
-                    children: data
-                        .map(
-                          (category) => Padding(
-                            padding: const EdgeInsets.only(right: 16.0),
-                            child: FilterChip(
-                              label: Text(category.name),
-                              selected: selectedCategory.value == category,
-                              onSelected: (isSelected) {
-                                if (isSelected) {
-                                  selectedCategory.value = category;
-                                }
-                              },
+                  const SizedBox(height: 20),
+                  _buildAddableList(
+                    label: 'Add Ingredient',
+                    controller: ingredientController,
+                    validator: (value) {
+                      if (ingredients.value.isEmpty) {
+                        return 'Please add an ingredient. Click + to add';
+                      }
+                      return null;
+                    },
+                    items: ingredients.value,
+                    onAdd: (value) {
+                      ingredients.value = [...ingredients.value, value];
+                    },
+                    onDelete: (value) {
+                      ingredients.value = List.from(ingredients.value)
+                        ..remove(value);
+                    },
+                    context: context,
+                  ),
+                  const SizedBox(height: 20),
+                  _buildAddableList(
+                    label: 'Add Step',
+                    controller: stepController,
+                    validator: (value) {
+                      if (steps.value.isEmpty) {
+                        return 'Please add a step. Click + to add';
+                      }
+                      return null;
+                    },
+                    items: steps.value,
+                    onAdd: (value) {
+                      steps.value = [...steps.value, value];
+                    },
+                    onDelete: (value) {
+                      steps.value = List.from(steps.value)..remove(value);
+                    },
+                    context: context,
+                  ),
+                  const SizedBox(height: 20),
+                  const Text('Select Categories',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 10),
+                  categories.when(
+                    data: (data) {
+                      selectedCategory.value ??= data.first;
+                      return Wrap(
+                        spacing: 8.0,
+                        runSpacing: 8.0,
+                        children: data.map((category) {
+                          return FilterChip(
+                            label: Text(category.name),
+                            selected: selectedCategory.value?.categoryId ==
+                                category.categoryId,
+                            onSelected: (isSelected) {
+                              if (isSelected) {
+                                selectedCategory.value = category;
+                              }
+                            },
+                            selectedColor:
+                                Theme.of(context).colorScheme.primaryContainer,
+                          );
+                        }).toList(),
+                      );
+                    },
+                    error: (error, stackTrace) => const Text(
+                      'Error loading categories',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                  ),
+                  const SizedBox(height: 30),
+                  Center(
+                    child: isAddingRecipe.value
+                        ? Center(child: CircularProgressIndicator())
+                        : ElevatedButton(
+                            onPressed: () => updateRecipe(
+                              formKey,
+                              recipeName,
+                              ingredients,
+                              steps,
+                              selectedCategory,
+                              isAddingRecipe,
+                              ref,
+                              context,
+                              user,
                             ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Theme.of(context)
+                                  .colorScheme
+                                  .primaryContainer,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 40, vertical: 15),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            child: const Text('Update Recipe',
+                                style: TextStyle(fontSize: 16)),
                           ),
-                        )
-                        .toList(),
-                  );
-                },
-                error: (error, stackTrace) => Text('Error loading categories'),
-                loading: () => Center(
-                  child: CircularProgressIndicator(),
-                ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 32),
-              Center(
-                child: isAddingRecipe.value
-                    ? Center(child: CircularProgressIndicator())
-                    : ElevatedButton(
-                        onPressed: () => updateRecipe(
-                          formKey,
-                          recipeName,
-                          ingredients,
-                          steps,
-                          selectedCategory,
-                          isAddingRecipe,
-                          ref,
-                          context,
-                        ),
-                        child: const Text('Update Recipe'),
-                      ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

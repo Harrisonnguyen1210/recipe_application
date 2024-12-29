@@ -57,7 +57,7 @@ class RecipeItem extends HookConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
+                  Wrap(
                     children: [
                       Text(
                         recipe.name,
@@ -67,9 +67,12 @@ class RecipeItem extends HookConsumerWidget {
                         ),
                       ),
                       favoriteCount.when(
-                        data: (data) => Text(data > 1
-                            ? ' - Favorited by $data users'
-                            : ' - Favorited by $data user'),
+                        data: (data) => Text(
+                          data > 1
+                              ? ' - Favorited by $data users'
+                              : ' - Favorited by $data user',
+                          maxLines: 2,
+                        ),
                         error: (error, stackTrace) => SizedBox.shrink(),
                         loading: () => SizedBox.shrink(),
                       ),
@@ -95,6 +98,7 @@ class RecipeItem extends HookConsumerWidget {
             ),
             user != null
                 ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       isFavorite.when(
                         data: (isFavorite) => InkWell(

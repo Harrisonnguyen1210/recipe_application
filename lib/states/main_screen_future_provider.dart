@@ -10,8 +10,9 @@ final mainScreenFutureProvider = FutureProvider<List<dynamic>>((ref) async {
   return await Future.wait([featuredRecipe, featureCategories]);
 });
 
-final featuredRecipeProvider = FutureProvider<Recipe>((ref) async {
+final featuredRecipeProvider = FutureProvider<Recipe?>((ref) async {
   final recipes = ref.watch(recipesProvider);
+  if (recipes.isEmpty) return null;
   final random = Random().nextInt(recipes.length);
   return recipes[random];
 });

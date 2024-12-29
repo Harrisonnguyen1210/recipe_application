@@ -19,9 +19,12 @@ class MainScreen extends ConsumerWidget {
           child: Text('Error, please try again'),
         ),
         data: (data) {
-          final featureRecipe = data[0] as Recipe;
+          final featureRecipe = data[0] as Recipe?;
           final featureCategories =
               (data[1] as List<Category>).take(3).toList();
+          if (featureRecipe == null || featureCategories.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
           return ResponsiveWidget(
             mobile: _buildMobileLayout(
