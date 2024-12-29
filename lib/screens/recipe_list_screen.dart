@@ -54,7 +54,6 @@ class RecipeListScreen extends HookConsumerWidget {
     );
   }
 
-  /// Build a responsive grid for recipes
   Widget _buildRecipeList(List recipes, int crossAxisCount) {
     return AlignedGridView.count(
       crossAxisCount: crossAxisCount,

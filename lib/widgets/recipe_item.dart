@@ -26,7 +26,7 @@ class RecipeItem extends HookConsumerWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Recipe deleted successfully.'),
-                  duration: Duration(seconds: 1),
+                  duration: Duration(seconds: 2),
                 ),
               );
               ref.read(recipesProvider.notifier).loadRecipes();

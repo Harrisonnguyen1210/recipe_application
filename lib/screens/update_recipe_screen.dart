@@ -35,6 +35,7 @@ class UpdateRecipeScreen extends HookConsumerWidget {
       await Future.delayed(Duration(milliseconds: 300));
       isAddingRecipe.value = false;
       if (context.mounted) context.go('/');
+      ref.invalidate(recipesProvider);
     }
   }
 

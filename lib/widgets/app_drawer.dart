@@ -17,7 +17,7 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.add),
             title: const Text('Add Recipe'),
             onTap: () {
-              context.pop();
+              Navigator.of(context).pop();
               context.go('/addRecipe');
             },
           ),
@@ -25,7 +25,7 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.favorite_outline),
             title: const Text('Favorites'),
             onTap: () {
-              context.pop();
+              Navigator.of(context).pop();
               context.go('/recipes/favorites');
             },
           ),

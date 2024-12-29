@@ -34,8 +34,10 @@ class RecipeSearchNotifier extends StateNotifier<AsyncValue<List<Recipe>>> {
     }
   }
 
-  void loadRecipe(Recipe recipe) {
-    state = AsyncValue.data([recipe]);
+  void loadRecipe(Recipe recipe) async {
+    final recipeResult =
+        await ref.read(firestoreServiceProvider).getRecipeById(recipe.recipeId);
+    state = AsyncValue.data(recipeResult != null ? [recipeResult] : []);
   }
 
   void deleteRecipe(String recipeId) {

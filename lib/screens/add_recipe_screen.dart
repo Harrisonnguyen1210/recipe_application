@@ -33,6 +33,7 @@ class AddRecipeScreen extends HookConsumerWidget {
 
       ref.read(firestoreServiceProvider).addRecipe(recipeData);
       await Future.delayed(Duration(milliseconds: 300));
+      ref.invalidate(recipesProvider);
       isAddingRecipe.value = false;
       if (context.mounted) context.go('/');
     }
