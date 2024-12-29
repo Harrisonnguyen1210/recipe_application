@@ -20,16 +20,20 @@ class RecipeItem extends HookConsumerWidget {
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
-              ref.read(recipeSearchProvider.notifier).deleteRecipe(recipeId);
-              context.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Recipe deleted successfully.'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
-              ref.read(recipesProvider.notifier).loadRecipes();
+            onPressed: () async {
+              await ref
+                  .read(recipeSearchProvider.notifier)
+                  .deleteRecipe(recipeId);
+              if (context.mounted) {
+                context.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Recipe deleted successfully.'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              }
+              await ref.read(recipesProvider.notifier).loadRecipes();
             },
             child: const Text('Delete'),
           ),
