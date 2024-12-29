@@ -15,7 +15,7 @@ class RecipeListScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(recipesProvider);
     final recipeList =
-        ref.read(recipesProvider.notifier).getRecipesByCategoryId(categoryId);
+        ref.watch(recipesProvider.notifier).getRecipesByCategoryId(categoryId);
 
     return Padding(
       padding: const EdgeInsets.all(24.0),
